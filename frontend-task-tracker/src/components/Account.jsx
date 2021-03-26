@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
 
-const Account = ({ isLoggedIn }) => {
+const Account = () => {
   const [isLoginForm, setIsLoginForm] = useState(true);
 
   const onToggleForm = (e) => {
@@ -11,7 +11,7 @@ const Account = ({ isLoggedIn }) => {
     setIsLoginForm(!isLoginForm);
   };
 
-  if (isLoggedIn === true) return <Redirect to="/" />;
+  if (localStorage.getItem("isLoggedIn")) return <Redirect to="/" />;
 
   return (
     <>

@@ -45,6 +45,7 @@ const LoginForm = () => {
   const doSubmit = async () => {
     try {
       await auth.login(email, password);
+      localStorage.setItem("isLoggedIn", "true");
       window.location = "/"; // Since history.push does not cause a full reload of app
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {

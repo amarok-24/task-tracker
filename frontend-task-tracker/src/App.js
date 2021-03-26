@@ -1,62 +1,41 @@
-import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Route, Switch, Redirect, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import auth from "./services/authService";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Tasks from "./components/Tasks";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import About from "./components/About";
 import Account from "./components/Account";
+import NotFound from "./components/NotFound";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    checkLogin();
-
-    return () => {};
-  }, [isLoggedIn]);
-
-  const checkLogin = async () => {
-    setIsLoggedIn(await auth.isLoggedIn());
-  };
+  const location = useLocation();
 
   return (
-    <Router>
-      <div className="container">
-        <ToastContainer />
+    <div className="container">
+      <ToastContainer />
 
-        <ProtectedRoute
-          path="/"
-          exact
-          component={Tasks}
-          isLoggedIn={isLoggedIn}
-        />
+      {location.pathname !== "/" && <Header />}
 
-        <Route
-          path="/account"
-          render={(props) => (
-            <>
-              <Header /> <Account {...props} isLoggedIn={isLoggedIn} />
-            </>
-          )}
-        />
-
-        <Route
+      <Switch>
+        <ProtectedRoute path="/" exact component={Tasks} />
+        <Route path="/account" component={Account} />
+        <Route path="/about" component={About} />
+        <Route path="/not-found" component={NotFound} />
+        <Redirect to="/not-found" />
+        {/* <Route
           path="/about"
           render={(props) => (
             <>
-              <Header /> <About {...props} />
+              <Account {...props} />
             </>
           )}
-        />
-        {/* <Route path="/about" component={About} /> */}
+        /> */}
+      </Switch>
 
-        <Footer />
-      </div>
-    </Router>
+      <Footer />
+    </div>
   );
 }
 

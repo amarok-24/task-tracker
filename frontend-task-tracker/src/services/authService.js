@@ -18,29 +18,9 @@ const logout = async () => {
   await http.post(apiEndpoint + "logout/", {});
 };
 
-const isLoggedIn = async () => {
-  let val = false;
-
-  try {
-    await http.post(apiEndpoint + "token/verify/", {});
-    val = true; // access token is valid
-  } catch (ex) {
-    if (ex.response && ex.response.status === 400) {
-      // access token expired, needs to be refreshed
-      try {
-        await http.post(apiEndpoint + "token/refresh/", {});
-        val = true;
-      } catch (ex) {}
-    }
-  }
-
-  return val;
-};
-
 const auth = {
   login,
   logout,
-  isLoggedIn,
 };
 
 export default auth;

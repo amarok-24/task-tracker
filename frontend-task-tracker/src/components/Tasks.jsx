@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import auth from "../services/authService.js";
+import auth from "../services/authService";
 import { getTasks, saveTask, deleteTask } from "../services/taskService";
-import Header from "./Header";
-import Task from "./Task.jsx";
+import Task from "./Task";
 import TaskForm from "./TaskForm";
+import Header from "./Header";
 
 const Tasks = () => {
   const [tasks, setTasks] = useState([]);
@@ -55,7 +55,8 @@ const Tasks = () => {
 
   const onLogout = async () => {
     await auth.logout();
-    window.location = "/";
+    localStorage.removeItem("isLoggedIn");
+    window.location = "/account";
   };
 
   return (

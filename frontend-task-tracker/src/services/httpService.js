@@ -13,19 +13,20 @@ const refreshToken = async () => {
 axios.interceptors.response.use(null, async (error) => {
   // Handle refreshing access token
 
-  if (error.response.status === 401) {
-    // Unauthorized, MIGHT need to refresh token
-    try {
+  if (error.config && error.response && error.response.status === 400) {
+    if (error.config.url === apiEndpoint + "token/verify/") {
       await refreshToken();
-      return axios(error.config); // try the request again after refreshing the access token
-    } catch (ex) {
-      if (ex.response.status === 400) {
-        // No refresh token available, already logged out
-        window.location = "/auth";
-
-        // No code below this will be executed
-      }
+      return axios.request(error.config);
     }
+  }
+
+  if (error.config && error.response && error.response.status === 401) {
+    if (error.config.url !== apiEndpoint + "token/refresh/") {
+      // not logged out yet
+      await refreshToken();
+      return axios.request(error.config);
+    }
+    window.location = "/account";
   }
 
   // Handle Unexpected errors
